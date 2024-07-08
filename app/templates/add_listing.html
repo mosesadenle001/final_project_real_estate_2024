@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Create New Listing</h2>
+    <form method="POST" action="{{ url_for('main.new_listing') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}<br>
+            {% for error in form.title.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.location.label }}<br>
+            {{ form.location(size=32) }}<br>
+            {% for error in form.location.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.content.label }}<br>
+            {{ form.content(rows=5) }}<br>
+            {% for error in form.content.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+{% endblock %}

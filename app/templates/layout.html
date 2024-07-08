@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Listings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('main.home') }}">Home</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.new_listing') }}">New Listing</a></li>
+                <li><a href="{{ url_for('main.account') }}">Account</a></li>
+                <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('main.login') }}">Login</a></li>
+                <li><a href="{{ url_for('main.register') }}">Register</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('main.search') }}">Search</a></li>
+            <li><a href="{{ url_for('main.search_by_location') }}">Search by Location</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Real Estate Listings </h1>
+        <p><strong>Idea:</strong>Discover a place you'll love to live</p>
+        <p><strong>Description:</strong></p> This project is real estate listings platform that allow homebuyers and sellers to feel overwhelming
+    </div>
+
+</body>
+</html>
+
+<--div class="container">

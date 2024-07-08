@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Compare Properties</h2>
+  {% for property in properties %}
+    <div>
+      <h3>{{ property.title }}</h3>
+      <p>{{ property.description }}</p>
+      <p>Price: {{ property.price }}</p>
+      <p>Location: {{ property.location }}</p>
+      <a href="{{ url_for('routes.property', property_id=property.id) }}">View Property</a>
+    </div>
+  {% endfor %}
+{% endblock %}

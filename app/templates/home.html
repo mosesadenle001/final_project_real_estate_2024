@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Home Page</h1>
+    {% for listing in listings %}
+        <div class="listing">
+            <h2>{{ listing.title }}</h2>
+            <p><strong>Location:</strong> {{ listing.location }}</p>
+            <p>{{ listing.content }}</p>
+            <p><small>{{ listing.date_posted.strftime('%Y-%m-%d') }}</small></p>
+        </div>
+    {% endfor %}
+{% endblock %}

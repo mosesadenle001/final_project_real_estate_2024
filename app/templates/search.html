@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Search Properties</h2>
+  <form method="POST" action="{{ url_for('routes.search') }}">
+    <div>
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location">
+    </div>
+    <button type="submit">Search</button>
+  </form>
+{% endblock %}
