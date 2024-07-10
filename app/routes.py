@@ -1,19 +1,23 @@
 from flask import (Blueprint, render_template, url_for, flash, redirect, request,
-                   abort, current_app)
+                   abort)
 from __init__ import db, bcrypt
-from forms import RegistrationForm, LoginForm, UpdateAccountForm, PropertyForm, ResetPasswordForm
-from models import User, Property
+from forms import RegistrationForm, LoginForm, UpdateAccountForm, SubmitListingForm, PropertyForm, ResetPasswordForm, ListingForm, LocationForm
+from models import User, Property, Listing, Location
 from flask_login import login_user, current_user, logout_user, login_required
 import pandas as pd
-
+from utils import send_reset_email
+from utils import save_picture
 
 bp = Blueprint('routes', __name__)
 
 @bp.route("/")
 @bp.route("/home")
 def home():
-    properties = Property.query.all()
-    return render_template('home.html', properties=properties)
+    page = request.args.get('page', 1, type=int)
+    properties = Property.query.order_by(Property.date_posted.desc()).paginate(page=page, per_page=5)
+    listings = Listing.query.order_by(Listing.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template('home.html', properties=properties, listings=listings)
+
 
 @bp.route("/register", methods=['GET', 'POST'])
 def register():
@@ -27,7 +31,7 @@ def register():
         db.session.commit()
         flash('Your account has been created successfully')
         return redirect(url_for('routes.login'))
-    return render_template('register.html', title='Register', form=form, button_text="Register")
+    return render_template('register.html', title='R', form=form, button_text="Register")
 
 @bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -42,7 +46,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('routes.home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('signup_or_login.html', title='Login', form=form, button_text="Login")
+    return render_template('signup.html', title='Login', form=form, button_text="Login")
 
 @bp.route("/logout")
 def logout():
@@ -63,6 +67,21 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('account.html', title='Account', form=form)
+@bp.route("/listing/<int:listing_id>")
+def listing(listing_id):
+    listing = Listing.query.get_or_404(listing_id)
+    return render_template('listing.html', title=listing.title, listing=listing)
+
+@bp.route("/property/<int:property_id>")
+def property(property_id):
+    property = Property.query.get_or_404(property_id)
+    return render_template('property.html', title=property.title, property=property)
+
+@bp.route("/location/<int:location_id>")
+def location(location_id):
+    location = Location.query.get_or_404(location_id)
+    return render_template('location.html', title=location.name, location=location)
+
 
 @bp.route("/property/new", methods=['GET', 'POST'])
 @login_required
@@ -76,10 +95,34 @@ def new_property():
         return redirect(url_for('routes.home'))
     return render_template('add_listing.html', title='New Property', form=form)
 
-@bp.route("/property/<int:property_id>")
-def property(property_id):
-    property = Property.query.get_or_404(property_id)
-    return render_template('property.html', title=property.title, property=property)
+@bp.route("/listing/new", methods=['GET', 'POST'])
+@login_required
+def new_listing():
+    form = ListingForm()
+    if form.validate_on_submit():
+        listing = Listing(title=form.title.data, location=form.location.data, content=form.content.data, author=current_user)
+        db.session.add(listing)
+        db.session.commit()
+        flash('Your listing has been created!', 'success')
+        return redirect(url_for('main.home'))
+    return render_template('add_listing.html', title='New Listing', form=form, legend='New Listing')
+
+@bp.route("/location/new", methods=['GET', 'POST'])
+@login_required
+def new_location():
+    form = LocationForm()
+    if form.validate_on_submit():
+        location = Location(name=form.name.data, description=form.description.data)
+        db.session.add(location)
+        db.session.commit()
+        flash('Your location has been added!', 'success')
+        return redirect(url_for('main.home'))
+    return render_template('add_location.html', title='New Location', form=form)
+
+@bp.route("/search_by_location")
+def search_by_location():
+    locations = Location.query.all()
+    return render_template('search_by_location.html', title='Search by Location', locations=locations)
 
 @bp.route("/property/<int:property_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -111,7 +154,7 @@ def delete_property(property_id):
         abort(403)
     db.session.delete(property)
     db.session.commit()
-    flash('Your property has been deleted!', 'success')
+    flash('Your property has been deleted successful')
     return redirect(url_for('routes.home'))
 
 @bp.route("/search", methods=['GET', 'POST'])
@@ -138,7 +181,8 @@ def export_csv():
         'Location': property.location,
         'Date Posted': property.date_posted,
         'Owner': property.owner.username
-    } for property in properties]
+    }
+        for property in properties]
     df = pd.DataFrame(data)
     df.to_csv('properties.csv', index=False)
     flash('Properties have been exported to CSV!', 'success')
@@ -157,3 +201,21 @@ def reset_password():
         else:
             flash('No account found with that email.')
     return render_template('reset_password.html', title='Reset Password', form=form)
+
+
+@bp.route("/submit", methods=['GET', 'POST'])
+@login_required
+def submit():
+    form = SubmitListingForm()
+    if form.validate_on_submit():
+        listing = Listing(title=form.title.data,
+                          location=form.location.data,
+                          price=form.price.data,
+                          bedrooms=form.bedrooms.data,
+                          bathrooms=form.bathrooms.data,
+                          description=form.description.data)
+        db.session.add(listing)
+        db.session.commit()
+        flash('Your listing has been submitted!', 'success')
+        return redirect(url_for('main.home'))
+    return render_template('submit.html', title='Submit Listing', form=form)

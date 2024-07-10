@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "layout.html" %}
+{% block content %}
+    <h2>{{ location.name }}</h2>
+    <p>{{ location.description }}</p>
+    <h3>Listings</h3>
+    {% for listing in location.listings %}
+        <div class="listing">
+            <h4>{{ listing.title }}</h4>
+            <p>{{ listing.content }}</p>
+            <p><small>{{ listing.date_posted.strftime('%Y-%m-%d') }}</small></p>
+            <a href="{{ url_for('main.listing', listing_id=listing.id) }}">View Listing</a>
+        </div>
+    {% endfor %}
+    <a href="{{ url_for('main.home') }}">Back to Home</a>
+{% endblock %}

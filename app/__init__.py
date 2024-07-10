@@ -28,7 +28,6 @@ def create_app():
     app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
     app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
 
-
     #FLASK_APP = __init__.py
 
     db.init_app(app)

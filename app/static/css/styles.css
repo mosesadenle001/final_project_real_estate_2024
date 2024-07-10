@@ -1,18 +1,122 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
 }
 
 nav {
-    margin-bottom: 20px;
+    background-color: #343a40;
+    padding: 1rem;
 }
 
-nav a {
-    margin-right: 10px;
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
     text-decoration: none;
-    color: blue;
+    font-weight: bold;
 }
 
 .container {
-    width: 80%;
-    margin: auto;
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+h1, h2, h3 {
+    color: #343a40;
+}
+
+.listing {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+form div {
+    margin-bottom: 1rem;
+}
+
+form div label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+form div input[type="text"],
+form div input[type="email"],
+form div input[type="password"],
+form div textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+form div input[type="submit"] {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form div input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    font-size: 0.875rem;
+}
+
+.pagination {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 10px 20px;
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #f8f9fa;
+}
+

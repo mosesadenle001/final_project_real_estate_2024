@@ -1,12 +1,30 @@
 {% extends "layout.html" %}
+
 {% block content %}
     <h1>Home Page</h1>
+
+    <h2>Properties</h2>
+    {% for property in properties %}
+        <div>
+            <h3>{{ property.title }}</h3>
+            <p><strong>Location:</strong> {{ property.location.name }}</p>
+            <p><strong>Price:</strong> ${{ property.price }}</p>
+            <p><strong>Bedrooms:</strong> {{ property.bedrooms }}</p>
+            <p><strong>Bathrooms:</strong> {{ property.bathrooms }}</p>
+            <p>{{ property.description }}</p>
+            <p><small>{{ property.date_posted.strftime('%Y-%m-%d') }}</small></p>
+            <!-- Add more details or links if needed -->
+        </div>
+    {% endfor %}
+
+    <h2>Listings</h2>
     {% for listing in listings %}
-        <div class="listing">
-            <h2>{{ listing.title }}</h2>
+        <div>
+            <h3>{{ listing.title }}</h3>
             <p><strong>Location:</strong> {{ listing.location }}</p>
             <p>{{ listing.content }}</p>
             <p><small>{{ listing.date_posted.strftime('%Y-%m-%d') }}</small></p>
+            <img src="{{ url_for('static', filename='img/default.jpg') }}" alt="No Image Available">
         </div>
     {% endfor %}
 {% endblock %}

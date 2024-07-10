@@ -55,6 +55,18 @@ class Property(db.Model):
     location = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    def __repr__(self):
+        return f"Property('{self.title}', '{self.date_posted}')"
+
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    description = db.Column(db.Text, nullable=False)
+    listings = db.relationship('Listing', backref='location', lazy=True)
+    def __repr__(self):
+        return f"Location('{self.name}')"
+
 
 
 db.create_all()
